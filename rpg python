@@ -1,0 +1,63 @@
+import random
+
+class Player:
+    def __init__(self, name, health, attack_damage):
+        self.name = name
+        self.health = health
+        self.attack_damage = attack_damage
+
+    def is_alive(self):
+        return self.health > 0
+
+    def attack(self, enemy):
+        damage = random.randint(1, self.attack_damage)
+        enemy.take_damage(damage)
+        print(f"{self.name} attacks {enemy.name} and deals {damage} damage.")
+
+    def take_damage(self, damage):
+        self.health -= damage
+        if self.health < 0:
+            self.health = 0
+
+class Enemy:
+    def __init__(self, name, health, attack_damage):
+        self.name = name
+        self.health = health
+        self.attack_damage = attack_damage
+
+    def is_alive(self):
+        return self.health > 0
+
+    def attack(self, player):
+        damage = random.randint(1, self.attack_damage)
+        player.take_damage(damage)
+        print(f"{self.name} attacks {player.name} and deals {damage} damage.")
+
+    def take_damage(self, damage):
+        self.health -= damage
+        if self.health < 0:
+            self.health = 0
+
+def main():
+    player = Player("Player", 100, 20)
+    enemy = Enemy("Enemy", 50, 10)
+
+    while player.is_alive() and enemy.is_alive():
+        action = input("What do you want to do? (attack/flee): ").lower()
+
+        if action == "attack":
+            player.attack(enemy)
+            if not enemy.is_alive():
+                print(f"You defeated {enemy.name}!")
+                break
+            enemy.attack(player)
+            if not player.is_alive():
+                print("Game over! You were defeated.")
+        elif action == "flee":
+            print("You fled from the battle. Game over!")
+            break
+        else:
+            print("Invalid action! Please choose 'attack' or 'flee'.")
+
+if __name__ == "__main__":
+    main()
